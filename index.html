@@ -181,7 +181,6 @@ animation: bounceIn 0.6s ease;
 100% { transform: translateX(-50%) scale(1); }
 }
 
-/* Controls lowered to bottom: 100px (was 140px) */
 .touch-controls {
 position: absolute;
 bottom: 100px;
@@ -473,7 +472,6 @@ animation: starTwinkle 1.5s ease-in-out infinite;
 50% { transform: scale(1.2); filter: brightness(1.3); }
 }
 
-/* Tip box adjusted for new control position */
 .tip-box {
 position: absolute;
 bottom: 180px;
@@ -558,13 +556,17 @@ h1 { font-size: 64px; -webkit-text-stroke: 4px #667eea; }
 
 <div class="tip-box" id="tip-box"></div>
 
-<!-- Fixed: btnLeft shows ⬅️ (left arrow), btnRight shows ➡️ (right arrow) -->
+<!-- FIXED: Arrow buttons now match their visual position and function correctly -->
+<!-- Left side: Jump button -->
+<!-- Right side: Left arrow (⬅️) on the RIGHT, Right arrow (➡️) on the LEFT of the d-pad -->
+<!-- This matches the screenshot layout where ➡️ is leftmost and ⬅️ is rightmost -->
 <div class="touch-controls" id="touchControls">
-<div class="d-pad">
-<button class="control-btn" id="btnLeft">⬅️</button>
-<button class="control-btn" id="btnRight">➡️</button>
-</div>
 <button class="control-btn btn-jump" id="btnJump">⬆️</button>
+<div class="d-pad">
+<!-- In the screenshot, ➡️ appears on the left side of d-pad, ⬅️ on the right -->
+<button class="control-btn" id="btnRight">➡️</button>
+<button class="control-btn" id="btnLeft">⬅️</button>
+</div>
 </div>
 </div>
 
@@ -764,7 +766,7 @@ window.addEventListener('resize', resize);
 let gameRunning = false;
 let score = 0;
 let totalScore = 0;
-let health = 5; // Changed from 3 to 5 lives
+let health = 5;
 let cameraX = 0;
 let currentLevel = 1;
 let highScore = localStorage.getItem('drLammaHighScore') || 0;
@@ -793,11 +795,12 @@ keys[key] = false;
 btn.classList.remove('active');
 };
 
-// Fixed: btnLeft controls 'left', btnRight controls 'right'
+// FIXED: btnLeft (⬅️) is now on the RIGHT side of d-pad, moves player LEFT
 btnLeft.addEventListener('touchstart', (e) => handleTouch(btnLeft, 'left', e), {passive: false});
 btnLeft.addEventListener('touchend', (e) => handleRelease(btnLeft, 'left', e), {passive: false});
 btnLeft.addEventListener('touchcancel', (e) => handleRelease(btnLeft, 'left', e), {passive: false});
 
+// FIXED: btnRight (➡️) is now on the LEFT side of d-pad, moves player RIGHT
 btnRight.addEventListener('touchstart', (e) => handleTouch(btnRight, 'right', e), {passive: false});
 btnRight.addEventListener('touchend', (e) => handleRelease(btnRight, 'right', e), {passive: false});
 btnRight.addEventListener('touchcancel', (e) => handleRelease(btnRight, 'right', e), {passive: false});
@@ -1827,7 +1830,7 @@ const level = levels[lvl - 1];
 currentLevel = lvl;
 levelComplete = false;
 
-health = 5; // Reset to 5 lives each level
+health = 5;
 updateHearts();
 
 player = new Player(100, 300);
@@ -1859,7 +1862,6 @@ if (health <= 0) gameOver();
 }
 
 function updateHearts() {
-// Now shows 5 hearts
 document.getElementById('hearts').innerHTML = '❤️'.repeat(health) + '🖤'.repeat(5 - health);
 }
 
@@ -2137,7 +2139,7 @@ audioCtx.resume();
 
 document.getElementById('start-screen').style.display = 'none';
 totalScore = 0;
-health = 5; // Start with 5 lives
+health = 5;
 updateHearts();
 updateScore();
 initLevel(1);
