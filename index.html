@@ -97,12 +97,12 @@ animation: hudPop 0.3s ease;
 
 .hearts {
 display: flex;
-gap: 3px;
-margin-left: 50px;
+gap: 2px;
+margin-left: 30px;
 }
 
 .heart {
-font-size: 22px;
+font-size: 20px;
 animation: heartBeat 1.5s ease-in-out infinite;
 filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
@@ -181,10 +181,10 @@ animation: bounceIn 0.6s ease;
 100% { transform: translateX(-50%) scale(1); }
 }
 
-/* IMPROVED: Controls moved higher up (bottom: 140px instead of 80px) */
+/* Controls lowered to bottom: 100px (was 140px) */
 .touch-controls {
 position: absolute;
-bottom: 140px;
+bottom: 100px;
 left: 0;
 width: 100%;
 display: flex;
@@ -473,10 +473,10 @@ animation: starTwinkle 1.5s ease-in-out infinite;
 50% { transform: scale(1.2); filter: brightness(1.3); }
 }
 
-/* IMPROVED: Tip box moved higher to accommodate controls */
+/* Tip box adjusted for new control position */
 .tip-box {
 position: absolute;
-bottom: 220px;
+bottom: 180px;
 left: 50%;
 transform: translateX(-50%);
 background: linear-gradient(135deg, #fff5e6, #ffe4b5);
@@ -519,8 +519,8 @@ h1 { font-size: 64px; -webkit-text-stroke: 4px #667eea; }
 .certificate h2 { font-size: 28px; }
 .tip-box { font-size: 16px; }
 .control-btn { width: 55px; height: 55px; font-size: 22px; }
-.touch-controls { bottom: 120px; }
-.tip-box { bottom: 190px; }
+.touch-controls { bottom: 80px; }
+.tip-box { bottom: 150px; }
 }
 </style>
 </head>
@@ -545,6 +545,8 @@ h1 { font-size: 64px; -webkit-text-stroke: 4px #667eea; }
 <span class="heart">❤️</span>
 <span class="heart">❤️</span>
 <span class="heart">❤️</span>
+<span class="heart">❤️</span>
+<span class="heart">❤️</span>
 </div>
 </div>
 
@@ -556,10 +558,11 @@ h1 { font-size: 64px; -webkit-text-stroke: 4px #667eea; }
 
 <div class="tip-box" id="tip-box"></div>
 
+<!-- Fixed: btnLeft shows ⬅️ (left arrow), btnRight shows ➡️ (right arrow) -->
 <div class="touch-controls" id="touchControls">
 <div class="d-pad">
-<button class="control-btn" id="btnRight">⬅️</button>
-<button class="control-btn" id="btnLeft">➡️</button>
+<button class="control-btn" id="btnLeft">⬅️</button>
+<button class="control-btn" id="btnRight">➡️</button>
 </div>
 <button class="control-btn btn-jump" id="btnJump">⬆️</button>
 </div>
@@ -761,7 +764,7 @@ window.addEventListener('resize', resize);
 let gameRunning = false;
 let score = 0;
 let totalScore = 0;
-let health = 3;
+let health = 5; // Changed from 3 to 5 lives
 let cameraX = 0;
 let currentLevel = 1;
 let highScore = localStorage.getItem('drLammaHighScore') || 0;
@@ -790,6 +793,7 @@ keys[key] = false;
 btn.classList.remove('active');
 };
 
+// Fixed: btnLeft controls 'left', btnRight controls 'right'
 btnLeft.addEventListener('touchstart', (e) => handleTouch(btnLeft, 'left', e), {passive: false});
 btnLeft.addEventListener('touchend', (e) => handleRelease(btnLeft, 'left', e), {passive: false});
 btnLeft.addEventListener('touchcancel', (e) => handleRelease(btnLeft, 'left', e), {passive: false});
@@ -849,29 +853,19 @@ const objectives = [
 "🎯 اجمع ٥ فرشاة ووصل إلى العلم! 🚩"
 ];
 
-// ============================================
-// UNIQUE LEVEL DESIGNS - Each level is completely different!
-// ============================================
-
 const levels = [
-// LEVEL 1: Dental Clinic - Tutorial style, simple steps
 {
 name: "عيادة الأسنان",
 bg: ["#87CEEB", "#E0F6FF", "#98FB98"],
 bgType: "clinic",
 platforms: [
-// Ground floor - wide and safe
 {x: 0, y: 450, w: 300, h: 150, type: "floor"},
-// Small steps - tutorial style
 {x: 350, y: 400, w: 100, h: 30, type: "step"},
 {x: 500, y: 350, w: 100, h: 30, type: "step"},
 {x: 650, y: 300, w: 120, h: 30, type: "step"},
-// Bridge platform
 {x: 820, y: 320, w: 180, h: 40, type: "bridge"},
-// Final steps up
 {x: 1050, y: 280, w: 100, h: 30, type: "step"},
 {x: 1200, y: 240, w: 100, h: 30, type: "step"},
-// Victory platform
 {x: 1350, y: 350, w: 500, h: 250, type: "victory"}
 ],
 enemies: [
@@ -894,26 +888,19 @@ decorations: [
 ]
 },
 
-// LEVEL 2: Candy Land - Floating islands, candy theme
 {
 name: "أرض الحلوى",
 bg: ["#FFB6C1", "#FFC0CB", "#FFE4E1"],
 bgType: "candy",
 platforms: [
-// Starting island
 {x: 0, y: 450, w: 180, h: 150, type: "island"},
-// Floating candy platforms - different shapes
 {x: 250, y: 380, w: 80, h: 80, type: "donut"},
 {x: 400, y: 300, w: 70, h: 70, type: "donut"},
 {x: 550, y: 220, w: 90, h: 40, type: "candybar"},
-// Ice cream platform
 {x: 700, y: 320, w: 120, h: 100, type: "icecream"},
-// Lollipop stick platforms
 {x: 900, y: 260, w: 60, h: 120, type: "lollipop"},
 {x: 1050, y: 200, w: 60, h: 120, type: "lollipop"},
-// Cotton candy platform
 {x: 1200, y: 300, w: 140, h: 60, type: "cotton"},
-// Final cake platform
 {x: 1400, y: 400, w: 450, h: 200, type: "cake"}
 ],
 enemies: [
@@ -939,30 +926,22 @@ decorations: [
 ]
 },
 
-// LEVEL 3: Fluoride Castle - Vertical emphasis, castle theme
 {
 name: "قلعة الفلورايد",
 bg: ["#B0E0E6", "#E0FFFF", "#F0F8FF"],
 bgType: "castle",
 platforms: [
-// Castle entrance
 {x: 0, y: 480, w: 200, h: 120, type: "castle"},
-// Tower steps - vertical climbing
 {x: 250, y: 420, w: 60, h: 40, type: "stone"},
 {x: 350, y: 360, w: 60, h: 40, type: "stone"},
 {x: 280, y: 300, w: 100, h: 40, type: "stone"},
-// Bridge gap
 {x: 450, y: 340, w: 80, h: 30, type: "stone"},
-// High tower
 {x: 600, y: 250, w: 80, h: 150, type: "tower"},
 {x: 750, y: 200, w: 60, h: 40, type: "stone"},
-// Floating shields
 {x: 880, y: 280, w: 70, h: 70, type: "shield"},
 {x: 1000, y: 220, w: 70, h: 70, type: "shield"},
-// Castle wall top
 {x: 1150, y: 320, w: 100, h: 40, type: "stone"},
 {x: 1300, y: 260, w: 80, h: 40, type: "stone"},
-// Throne platform
 {x: 1450, y: 350, w: 400, h: 250, type: "throne"}
 ],
 enemies: [
@@ -992,10 +971,6 @@ decorations: [
 }
 ];
 
-// ============================================
-// ENHANCED DISNEY-STYLE PLAYER WITH SQUASH & STRETCH
-// ============================================
-
 class Player {
 constructor(x, y) {
 this.x = x;
@@ -1012,8 +987,6 @@ this.facingRight = true;
 this.invincible = false;
 this.invincibleTime = 0;
 this.anim = 0;
-
-// Disney animation properties
 this.squash = 1;
 this.stretch = 1;
 this.rotation = 0;
@@ -1030,7 +1003,6 @@ update() {
 this.anim++;
 this.blinkTimer++;
 
-// Random blinking for life
 if (this.blinkTimer > 150 + Math.random() * 100) {
 this.isBlinking = true;
 if (this.blinkTimer > 160) {
@@ -1039,27 +1011,22 @@ this.blinkTimer = 0;
 }
 }
 
-// Happy bounce when idle
 if (this.grounded && Math.abs(this.vx) < 0.5 && this.happyTimer > 0) {
 this.happyTimer--;
 }
 
-// Enhanced squash and stretch physics
 if (this.grounded) {
-// Landing squash effect
 if (this.landSquash > 0) {
 this.landSquash -= 0.05;
 this.squash = 1.3 - this.landSquash * 0.3;
 this.stretch = 0.7 + this.landSquash * 0.3;
 } else {
-// Running bounce
 if (Math.abs(this.vx) > 0.5) {
 const runCycle = Math.sin(this.anim * 0.25);
 this.squash = 1 + runCycle * 0.15;
 this.stretch = 1 - runCycle * 0.1;
 this.anticipationY = Math.abs(runCycle) * 3;
 } else {
-// Idle breathing
 const breathe = Math.sin(this.anim * 0.1);
 this.squash = 1 + breathe * 0.05;
 this.stretch = 1 - breathe * 0.03;
@@ -1068,20 +1035,16 @@ this.anticipationY = 0;
 }
 this.jumpStretch = 0;
 } else {
-// Jumping stretch - more pronounced!
 this.jumpStretch = Math.min(this.jumpStretch + 0.1, 1);
 const stretchFactor = 1 + this.jumpStretch * 0.4;
 const squashFactor = 1 - this.jumpStretch * 0.2;
 this.squash = squashFactor;
 this.stretch = stretchFactor;
-
-// Rotate based on velocity for dynamic feel
 this.targetRotation = (this.vx * 0.05) + (this.vy * 0.02);
 }
 
-// Smooth rotation
 this.rotation += (this.targetRotation - this.rotation) * 0.1;
-this.targetRotation *= 0.9; // Decay
+this.targetRotation *= 0.9;
 
 if (keys.left) {
 this.vx = -this.speed;
@@ -1093,13 +1056,12 @@ this.facingRight = true;
 this.vx *= 0.8;
 }
 
-// Jump anticipation (squash before jump)
 if (keys.up && this.grounded) {
-this.anticipationY = 8; // Squash down before jump
+this.anticipationY = 8;
 setTimeout(() => {
 this.vy = this.jumpPower;
 this.grounded = false;
-this.squash = 0.6; // Stretch up
+this.squash = 0.6;
 this.stretch = 1.5;
 this.jumpStretch = 1;
 this.anticipationY = 0;
@@ -1121,9 +1083,8 @@ this.grounded = false;
 platforms.forEach(p => {
 if (this.checkCollision(p)) {
 if (this.vy > 0 && this.y < p.y) {
-// Landing!
 if (!this.grounded && this.vy > 5) {
-this.landSquash = 1; // Trigger landing squash
+this.landSquash = 1;
 createSparkles(this.x + this.width/2, this.y + this.height, 6);
 }
 this.y = p.y - this.height;
@@ -1188,11 +1149,9 @@ if (!this.facingRight) ctx.scale(-1, 1);
 ctx.rotate(this.rotation);
 ctx.scale(this.stretch, this.squash);
 
-// Disney-style tooth character with enhanced expressiveness
 const bounce = Math.sin(this.anim * 0.15) * 2;
 const excited = this.happyTimer > 0 ? Math.sin(this.anim * 0.5) * 3 : 0;
 
-// Glow effect (stronger when happy)
 const glowSize = 25 + excited;
 const gradient = ctx.createRadialGradient(0, 0, 10, 0, 0, glowSize);
 gradient.addColorStop(0, 'rgba(255,255,255,0.9)');
@@ -1203,10 +1162,8 @@ ctx.beginPath();
 ctx.arc(0, 0, glowSize, 0, Math.PI * 2);
 ctx.fill();
 
-// Tooth body - more rounded and cute (Disney style)
 ctx.fillStyle = '#FFFFFF';
 ctx.beginPath();
-// Main body - pear shape
 ctx.moveTo(-12, -20 + bounce + excited);
 ctx.bezierCurveTo(-22, -10 + bounce + excited, -22, 15 + bounce + excited, -15, 22 + bounce + excited);
 ctx.bezierCurveTo(-8, 28 + bounce + excited, 8, 28 + bounce + excited, 15, 22 + bounce + excited);
@@ -1215,19 +1172,16 @@ ctx.bezierCurveTo(8, -28 + bounce + excited, -8, -28 + bounce + excited, -12, -2
 ctx.closePath();
 ctx.fill();
 
-// Shiny highlight (Disney gloss)
 ctx.fillStyle = 'rgba(255,255,255,0.8)';
 ctx.beginPath();
 ctx.ellipse(-6, -12 + bounce + excited, 8, 12, -0.4, 0, Math.PI * 2);
 ctx.fill();
 
-// Secondary highlight
 ctx.fillStyle = 'rgba(255,255,255,0.4)';
 ctx.beginPath();
 ctx.ellipse(8, -8 + bounce + excited, 4, 6, 0.3, 0, Math.PI * 2);
 ctx.fill();
 
-// Outline with gradient
 const strokeGrad = ctx.createLinearGradient(-15, -25, 15, 25);
 strokeGrad.addColorStop(0, '#E8E8E8');
 strokeGrad.addColorStop(0.5, '#D0D0D0');
@@ -1236,11 +1190,9 @@ ctx.strokeStyle = strokeGrad;
 ctx.lineWidth = 2.5;
 ctx.stroke();
 
-// Cute eyes - Disney style (large, expressive)
 const eyeY = -5 + bounce + excited;
 
 if (this.isBlinking) {
-// Blinking - cute closed eyes
 ctx.strokeStyle = '#2D3748';
 ctx.lineWidth = 3;
 ctx.lineCap = 'round';
@@ -1253,29 +1205,24 @@ ctx.moveTo(6, eyeY);
 ctx.quadraticCurveTo(10, eyeY + 3, 14, eyeY);
 ctx.stroke();
 } else {
-// Open eyes - big and shiny
-// Whites
 ctx.fillStyle = '#FFFFFF';
 ctx.beginPath();
 ctx.ellipse(-6, eyeY, 6, 7, 0, 0, Math.PI * 2);
 ctx.ellipse(10, eyeY, 6, 7, 0, 0, Math.PI * 2);
 ctx.fill();
 
-// Irises - blue and sparkly
 ctx.fillStyle = '#4A90E2';
 ctx.beginPath();
 ctx.arc(-6, eyeY, 4, 0, Math.PI * 2);
 ctx.arc(10, eyeY, 4, 0, Math.PI * 2);
 ctx.fill();
 
-// Pupils
 ctx.fillStyle = '#1A1A2E';
 ctx.beginPath();
 ctx.arc(-6, eyeY, 2.5, 0, Math.PI * 2);
 ctx.arc(10, eyeY, 2.5, 0, Math.PI * 2);
 ctx.fill();
 
-// Eye shine (Disney sparkle)
 ctx.fillStyle = '#FFFFFF';
 ctx.beginPath();
 ctx.arc(-4, eyeY - 2, 2, 0, Math.PI * 2);
@@ -1285,14 +1232,12 @@ ctx.arc(9, eyeY + 1, 1, 0, Math.PI * 2);
 ctx.fill();
 }
 
-// Rosy cheeks - more pronounced
 ctx.fillStyle = 'rgba(255,182,193,0.7)';
 ctx.beginPath();
 ctx.arc(-14, 6 + bounce + excited, 5, 0, Math.PI * 2);
 ctx.arc(16, 6 + bounce + excited, 5, 0, Math.PI * 2);
 ctx.fill();
 
-// Cute smile
 ctx.beginPath();
 ctx.arc(0, 10 + bounce + excited, 9, 0.15, Math.PI - 0.15);
 ctx.strokeStyle = '#2D3748';
@@ -1300,18 +1245,15 @@ ctx.lineWidth = 2.5;
 ctx.lineCap = 'round';
 ctx.stroke();
 
-// Small tooth inside mouth
 ctx.fillStyle = '#FFFFFF';
 ctx.beginPath();
 ctx.rect(-2, 14 + bounce + excited, 4, 4);
 ctx.fill();
 
-// Crown when powered up
 if (score > 0) {
 ctx.save();
 ctx.translate(0, -28 + bounce + excited);
 
-// Crown sparkle
 ctx.fillStyle = '#FFD700';
 ctx.beginPath();
 ctx.moveTo(-12, 0);
@@ -1324,7 +1266,6 @@ ctx.lineTo(12, 0);
 ctx.closePath();
 ctx.fill();
 
-// Crown jewels
 ctx.fillStyle = '#FF6B9D';
 ctx.beginPath();
 ctx.arc(0, -6, 3, 0, Math.PI * 2);
@@ -1333,13 +1274,11 @@ ctx.fill();
 ctx.restore();
 }
 
-// Toothbrush weapon
 if (score > 0 || currentLevel > 1) {
 ctx.save();
 ctx.translate(18, -2 + bounce + excited);
 ctx.rotate(Math.sin(this.anim * 0.1) * 0.3 + (this.facingRight ? 0 : Math.PI));
 
-// Sparkle trail
 if (Math.abs(this.vx) > 1) {
 ctx.fillStyle = 'rgba(135, 206, 235, 0.5)';
 ctx.beginPath();
@@ -1347,7 +1286,6 @@ ctx.arc(-25, 0, 4, 0, Math.PI * 2);
 ctx.fill();
 }
 
-// Handle with gradient
 const handleGrad = ctx.createLinearGradient(0, -3, 0, 3);
 handleGrad.addColorStop(0, '#FF8FB1');
 handleGrad.addColorStop(0.5, '#FF6B9D');
@@ -1357,13 +1295,11 @@ ctx.beginPath();
 ctx.roundRect(0, -4, 22, 8, 4);
 ctx.fill();
 
-// Brush head
 ctx.fillStyle = '#FFFFFF';
 ctx.beginPath();
 ctx.roundRect(20, -7, 12, 14, 3);
 ctx.fill();
 
-// Bristles with animation
 ctx.fillStyle = '#87CEEB';
 for (let i = 0; i < 3; i++) {
 ctx.fillRect(28 + i * 3, -6 + Math.sin(this.anim * 0.2 + i) * 1, 2, 12);
@@ -1375,10 +1311,6 @@ ctx.restore();
 ctx.restore();
 }
 }
-
-// ============================================
-// ENHANCED PLATFORMS WITH UNIQUE VISUALS PER LEVEL
-// ============================================
 
 class Platform {
 constructor(x, y, w, h, type = "normal") {
@@ -1394,7 +1326,6 @@ draw() {
 const dx = this.x - cameraX;
 this.anim++;
 
-// Level-specific platform rendering
 const levelType = levels[currentLevel - 1].bgType;
 
 if (levelType === "clinic") {
@@ -1409,18 +1340,14 @@ this.drawDefaultPlatform(dx);
 }
 
 drawClinicPlatform(dx) {
-// Clean, medical look
-// Top - sterile white/green
 ctx.fillStyle = '#E8F5E9';
 ctx.beginPath();
 ctx.roundRect(dx, this.y, this.width, 15, [8, 8, 0, 0]);
 ctx.fill();
 
-// Body - medical blue
 ctx.fillStyle = '#B3E5FC';
 ctx.fillRect(dx, this.y + 15, this.width, this.height - 15);
 
-// Cross pattern for medical feel
 ctx.strokeStyle = 'rgba(255,255,255,0.3)';
 ctx.lineWidth = 2;
 for (let i = 20; i < this.width - 10; i += 40) {
@@ -1430,7 +1357,6 @@ ctx.lineTo(dx + i, this.y + this.height - 5);
 ctx.stroke();
 }
 
-// Pulse line animation
 const pulse = Math.sin(this.anim * 0.05) * 5;
 ctx.strokeStyle = '#4CAF50';
 ctx.lineWidth = 3;
@@ -1443,27 +1369,22 @@ ctx.stroke();
 }
 
 drawCandyPlatform(dx) {
-// Sweet, colorful look based on type
 if (this.type === "donut") {
-// Donut shape
 ctx.fillStyle = '#F8BBD9';
 ctx.beginPath();
 ctx.arc(dx + this.width/2, this.y + this.height/2, this.width/2, 0, Math.PI * 2);
 ctx.fill();
 
-// Icing
 ctx.fillStyle = '#FF8FB1';
 ctx.beginPath();
 ctx.arc(dx + this.width/2, this.y + this.height/2, this.width/2 - 5, 0, Math.PI * 2);
 ctx.fill();
 
-// Hole
 ctx.fillStyle = levels[currentLevel - 1].bg[0];
 ctx.beginPath();
 ctx.arc(dx + this.width/2, this.y + this.height/2, this.width/4, 0, Math.PI * 2);
 ctx.fill();
 
-// Sprinkles
 ctx.fillStyle = ['#FFD700', '#87CEEB', '#98FB98'][Math.floor(this.anim / 30) % 3];
 for (let i = 0; i < 6; i++) {
 const angle = (i / 6) * Math.PI * 2 + this.anim * 0.02;
@@ -1472,34 +1393,28 @@ ctx.fillRect(dx + this.width/2 + Math.cos(angle) * r - 2,
 this.y + this.height/2 + Math.sin(angle) * r - 2, 4, 4);
 }
 } else if (this.type === "icecream") {
-// Ice cream scoop
 ctx.fillStyle = '#D7CCC8';
 ctx.fillRect(dx + 10, this.y + 40, this.width - 20, this.height - 40);
 
-// Scoop
 ctx.fillStyle = '#FFCCBC';
 ctx.beginPath();
 ctx.arc(dx + this.width/2, this.y + 40, this.width/2 - 5, Math.PI, 0);
 ctx.fill();
 
-// Dripping animation
 const drip = Math.abs(Math.sin(this.anim * 0.05)) * 10;
 ctx.beginPath();
 ctx.arc(dx + this.width/3, this.y + 40, 8, 0, Math.PI * 2);
 ctx.arc(dx + 2*this.width/3, this.y + 40 + drip/2, 6, 0, Math.PI * 2);
 ctx.fill();
 } else if (this.type === "lollipop") {
-// Stick
 ctx.fillStyle = '#D7CCC8';
 ctx.fillRect(dx + this.width/2 - 5, this.y, 10, this.height);
 
-// Candy top
 ctx.fillStyle = `hsl(${(this.anim * 2) % 360}, 70%, 60%)`;
 ctx.beginPath();
 ctx.arc(dx + this.width/2, this.y, this.width/2, 0, Math.PI * 2);
 ctx.fill();
 
-// Swirl
 ctx.strokeStyle = 'rgba(255,255,255,0.5)';
 ctx.lineWidth = 3;
 ctx.beginPath();
@@ -1508,7 +1423,6 @@ ctx.arc(dx + this.width/2, this.y, 5 + i * 8, this.anim * 0.05 + i, this.anim * 
 }
 ctx.stroke();
 } else {
-// Default candy bar
 ctx.fillStyle = '#FFCCBC';
 ctx.fillRect(dx, this.y, this.width, this.height);
 ctx.fillStyle = '#FFAB91';
@@ -1517,13 +1431,10 @@ ctx.fillRect(dx + 5, this.y + 5, this.width - 10, this.height - 10);
 }
 
 drawCastlePlatform(dx) {
-// Stone castle look
 if (this.type === "tower") {
-// Tower
 ctx.fillStyle = '#90A4AE';
 ctx.fillRect(dx, this.y, this.width, this.height);
 
-// Bricks
 ctx.strokeStyle = '#607D8B';
 ctx.lineWidth = 2;
 for (let row = 0; row < 5; row++) {
@@ -1534,7 +1445,6 @@ ctx.lineTo(dx + this.width, y);
 ctx.stroke();
 }
 
-// Tower top
 ctx.fillStyle = '#5C6BC0';
 ctx.beginPath();
 ctx.moveTo(dx - 5, this.y);
@@ -1542,7 +1452,6 @@ ctx.lineTo(dx + this.width/2, this.y - 20);
 ctx.lineTo(dx + this.width + 5, this.y);
 ctx.fill();
 } else if (this.type === "shield") {
-// Floating shield
 const float = Math.sin(this.anim * 0.05) * 5;
 
 ctx.fillStyle = '#C5CAE9';
@@ -1550,7 +1459,6 @@ ctx.beginPath();
 ctx.arc(dx + this.width/2, this.y + this.height/2 + float, this.width/2, 0, Math.PI * 2);
 ctx.fill();
 
-// Cross
 ctx.strokeStyle = '#3F51B5';
 ctx.lineWidth = 4;
 ctx.beginPath();
@@ -1560,11 +1468,9 @@ ctx.moveTo(dx + 10, this.y + this.height/2 + float);
 ctx.lineTo(dx + this.width - 10, this.y + this.height/2 + float);
 ctx.stroke();
 } else {
-// Stone block
 ctx.fillStyle = '#B0BEC5';
 ctx.fillRect(dx, this.y, this.width, this.height);
 
-// Stone texture
 ctx.fillStyle = 'rgba(255,255,255,0.2)';
 ctx.fillRect(dx + 5, this.y + 5, this.width - 10, 5);
 ctx.fillRect(dx + 10, this.y + 15, this.width - 20, 3);
@@ -1572,17 +1478,14 @@ ctx.fillRect(dx + 10, this.y + 15, this.width - 20, 3);
 }
 
 drawDefaultPlatform(dx) {
-// Rounded top grass
 ctx.fillStyle = '#4ADE80';
 ctx.beginPath();
 ctx.roundRect(dx, this.y, this.width, 20, [10, 10, 0, 0]);
 ctx.fill();
 
-// Dirt body
 ctx.fillStyle = '#8B4513';
 ctx.fillRect(dx, this.y + 20, this.width, this.height - 20);
 
-// Cute grass tufts with animation
 ctx.fillStyle = '#22C55E';
 for (let i = 10; i < this.width - 10; i += 25) {
 const sway = Math.sin(this.anim * 0.05 + i) * 4;
@@ -1593,10 +1496,6 @@ ctx.fill();
 }
 }
 }
-
-// ============================================
-// ENHANCED ENEMIES WITH MORE ANIMATION
-// ============================================
 
 class Enemy {
 constructor(x, y, type) {
@@ -1619,18 +1518,15 @@ update() {
 this.anim++;
 this.x += this.vx;
 
-// Bouncy animation
 const bounceSpeed = this.type === 'gummy' ? 0.2 : 0.1;
 this.bounceY = Math.abs(Math.sin(this.anim * bounceSpeed)) * 8;
 
-// Squash and stretch when turning
 if (this.x > this.startX + this.range || this.x < this.startX - this.range) {
 this.vx *= -1;
 this.squash = 0.7;
 this.stretch = 1.3;
 }
 
-// Recover from squash
 this.squash += (1 - this.squash) * 0.1;
 this.stretch += (1 - this.stretch) * 0.1;
 }
@@ -1643,13 +1539,11 @@ ctx.save();
 ctx.translate(dx + this.width/2, this.y + this.height/2 - this.bounceY);
 ctx.scale(this.stretch + wobble, this.squash - wobble);
 
-// Shadow
 ctx.fillStyle = 'rgba(0,0,0,0.15)';
 ctx.beginPath();
 ctx.ellipse(0, 22, 15, 5, 0, 0, Math.PI * 2);
 ctx.fill();
 
-// Enemy body with expression
 const emojis = {
 candy: '🍭',
 chocolate: '🍫',
@@ -1658,19 +1552,16 @@ gummy: '🍬',
 cookie: '🍪'
 };
 
-// Draw emoji
 ctx.font = '32px Arial';
 ctx.textAlign = 'center';
 ctx.textBaseline = 'middle';
 
-// Add angry effect for some enemies
 if (this.angryFace && this.anim % 200 < 100) {
 ctx.save();
 ctx.scale(1.1, 1.1);
 ctx.fillText(emojis[this.type] || '👾', 0, 0);
 ctx.restore();
 
-// Angry marks
 ctx.fillStyle = '#FF4757';
 ctx.font = '16px Arial';
 ctx.fillText('💢', -20, -15);
@@ -1678,7 +1569,6 @@ ctx.fillText('💢', -20, -15);
 ctx.fillText(emojis[this.type] || '👾', 0, 0);
 }
 
-// Health bar for tough enemies
 if (this.type === 'chocolate' || this.type === 'cookie') {
 ctx.fillStyle = 'rgba(0,0,0,0.3)';
 ctx.fillRect(-15, -28, 30, 4);
@@ -1689,10 +1579,6 @@ ctx.fillRect(-15, -28, 30, 4);
 ctx.restore();
 }
 }
-
-// ============================================
-// ENHANCED COLLECTIBLES WITH SPARKLE TRAIL
-// ============================================
 
 class Collectible {
 constructor(x, y) {
@@ -1724,7 +1610,6 @@ ctx.translate(dx + this.width/2 + floatX, this.y + this.height/2 + bob);
 ctx.rotate(this.rotation);
 ctx.scale(this.scale, this.scale);
 
-// Outer glow rings
 for (let i = 3; i > 0; i--) {
 ctx.strokeStyle = `rgba(255, 215, 0, ${0.3 + i * 0.1})`;
 ctx.lineWidth = 2;
@@ -1733,7 +1618,6 @@ ctx.arc(0, 0, 20 + i * 5 + Math.sin(this.anim * 0.1 + i) * 3, 0, Math.PI * 2);
 ctx.stroke();
 }
 
-// Sparkle particles around
 for (let i = 0; i < 6; i++) {
 const angle = (i / 6) * Math.PI * 2 + this.anim * 0.03;
 const dist = 30 + Math.sin(this.anim * 0.1 + i) * 5;
@@ -1747,12 +1631,10 @@ ctx.arc(sx, sy, size, 0, Math.PI * 2);
 ctx.fill();
 }
 
-// Toothbrush with shine
 ctx.font = '30px Arial';
 ctx.textAlign = 'center';
 ctx.textBaseline = 'middle';
 
-// Glow behind
 ctx.shadowColor = '#FFD700';
 ctx.shadowBlur = 20;
 ctx.fillText('🪥', 0, 0);
@@ -1761,10 +1643,6 @@ ctx.shadowBlur = 0;
 ctx.restore();
 }
 }
-
-// ============================================
-// ENHANCED FLAG WITH RIBBON PHYSICS
-// ============================================
 
 class Flag {
 constructor(x, y) {
@@ -1779,7 +1657,6 @@ for (let i = 0; i < 8; i++) this.ribbonPoints.push(0);
 
 update() {
 this.anim++;
-// Update ribbon physics
 for (let i = 0; i < this.ribbonPoints.length; i++) {
 const target = Math.sin(this.anim * 0.15 + i * 0.5) * (10 + i * 2);
 this.ribbonPoints[i] += (target - this.ribbonPoints[i]) * 0.3;
@@ -1791,7 +1668,6 @@ const dx = this.x - cameraX;
 
 ctx.save();
 
-// Pole with gradient
 const poleGrad = ctx.createLinearGradient(dx + 8, 0, dx + 12, 0);
 poleGrad.addColorStop(0, '#8B4513');
 poleGrad.addColorStop(0.5, '#A0522D');
@@ -1799,25 +1675,21 @@ poleGrad.addColorStop(1, '#8B4513');
 ctx.fillStyle = poleGrad;
 ctx.fillRect(dx + 8, this.y, 8, 80);
 
-// Pole top
 ctx.fillStyle = '#FFD700';
 ctx.beginPath();
 ctx.arc(dx + 12, this.y, 8, 0, Math.PI * 2);
 ctx.fill();
 
-// Waving flag with ribbon physics
 ctx.fillStyle = '#FF4757';
 ctx.beginPath();
 ctx.moveTo(dx + 16, this.y + 5);
 
-// Top edge
 for (let i = 0; i < this.ribbonPoints.length; i++) {
 const x = dx + 16 + (i / (this.ribbonPoints.length - 1)) * 45;
 const y = this.y + 5 + this.ribbonPoints[i];
 ctx.lineTo(x, y);
 }
 
-// Bottom edge
 for (let i = this.ribbonPoints.length - 1; i >= 0; i--) {
 const x = dx + 16 + (i / (this.ribbonPoints.length - 1)) * 45;
 const y = this.y + 35 + this.ribbonPoints[i] * 0.8;
@@ -1827,7 +1699,6 @@ ctx.lineTo(x, y);
 ctx.closePath();
 ctx.fill();
 
-// Flag shine
 ctx.fillStyle = 'rgba(255,255,255,0.4)';
 ctx.beginPath();
 ctx.moveTo(dx + 16, this.y + 5);
@@ -1841,7 +1712,6 @@ ctx.lineTo(dx + 16, this.y + 20);
 ctx.closePath();
 ctx.fill();
 
-// Sparkles
 if (this.anim % 20 < 10) {
 ctx.fillStyle = '#FFD700';
 ctx.beginPath();
@@ -1860,10 +1730,6 @@ player.y < this.y + this.height &&
 player.y + player.height > this.y;
 }
 }
-
-// ============================================
-// ENHANCED PARTICLES
-// ============================================
 
 class Sparkle {
 constructor(x, y, type = 'normal') {
@@ -1886,7 +1752,7 @@ this.color = palette[Math.floor(Math.random() * palette.length)];
 
 this.rotation = Math.random() * Math.PI * 2;
 this.rotSpeed = (Math.random() - 0.5) * 0.3;
-this.shape = Math.floor(Math.random() * 3); // 0: star, 1: circle, 2: diamond
+this.shape = Math.floor(Math.random() * 3);
 }
 
 update() {
@@ -1895,8 +1761,6 @@ this.y += this.vy;
 this.vy += 0.12;
 this.rotation += this.rotSpeed;
 this.life--;
-
-// Shrink
 this.size *= 0.98;
 }
 
@@ -1912,7 +1776,6 @@ ctx.rotate(this.rotation);
 ctx.fillStyle = this.color;
 
 if (this.shape === 0) {
-// Star
 ctx.beginPath();
 for (let i = 0; i < 5; i++) {
 const angle = (i * Math.PI * 2 / 5) - Math.PI / 2;
@@ -1929,12 +1792,10 @@ ctx.lineTo(ix, iy);
 ctx.closePath();
 ctx.fill();
 } else if (this.shape === 1) {
-// Circle
 ctx.beginPath();
 ctx.arc(0, 0, this.size, 0, Math.PI * 2);
 ctx.fill();
 } else {
-// Diamond
 ctx.beginPath();
 ctx.moveTo(0, -this.size);
 ctx.lineTo(this.size, 0);
@@ -1966,7 +1827,7 @@ const level = levels[lvl - 1];
 currentLevel = lvl;
 levelComplete = false;
 
-health = 3;
+health = 5; // Reset to 5 lives each level
 updateHearts();
 
 player = new Player(100, 300);
@@ -1998,7 +1859,8 @@ if (health <= 0) gameOver();
 }
 
 function updateHearts() {
-document.getElementById('hearts').innerHTML = '❤️'.repeat(health) + '🖤'.repeat(3 - health);
+// Now shows 5 hearts
+document.getElementById('hearts').innerHTML = '❤️'.repeat(health) + '🖤'.repeat(5 - health);
 }
 
 function updateScore() {
@@ -2111,10 +1973,6 @@ if (cameraX < 0) cameraX = 0;
 if (cameraX > maxCam) cameraX = maxCam;
 }
 
-// ============================================
-// ENHANCED BACKGROUNDS PER LEVEL
-// ============================================
-
 function drawBG() {
 const lvl = levels[currentLevel - 1];
 const grad = ctx.createLinearGradient(0, 0, 0, GAME_HEIGHT);
@@ -2136,20 +1994,17 @@ drawDefaultBG();
 }
 
 function drawClinicBG() {
-// Medical cross pattern in background
 ctx.fillStyle = 'rgba(255,255,255,0.1)';
 for (let x = 0; x < GAME_WIDTH + 200; x += 150) {
 for (let y = 50; y < GAME_HEIGHT; y += 150) {
 const parallaxX = (x - cameraX * 0.2) % (GAME_WIDTH + 200);
 const px = parallaxX < -50 ? parallaxX + GAME_WIDTH + 200 : parallaxX;
 
-// Cross
 ctx.fillRect(px + 60, y, 30, 100);
 ctx.fillRect(px + 35, y + 35, 80, 30);
 }
 }
 
-// Floating tooth bubbles
 ctx.fillStyle = 'rgba(255,255,255,0.15)';
 for (let i = 0; i < 5; i++) {
 const x = ((i * 200 + Date.now() * 0.02) % (GAME_WIDTH + 200)) - 100;
@@ -2163,7 +2018,6 @@ ctx.fill();
 }
 
 function drawCandyBG() {
-// Floating candy in background
 const candies = ['🍬', '🍭', '🧁', '🍩'];
 ctx.font = '40px Arial';
 ctx.globalAlpha = 0.2;
@@ -2182,7 +2036,6 @@ ctx.restore();
 
 ctx.globalAlpha = 1;
 
-// Sugar particles
 ctx.fillStyle = 'rgba(255,255,255,0.4)';
 for (let i = 0; i < 20; i++) {
 const x = ((i * 50 + Date.now() * 0.05) % GAME_WIDTH);
@@ -2192,15 +2045,12 @@ ctx.fillRect(x, y, 3, 3);
 }
 
 function drawCastleBG() {
-// Distant castle towers
 ctx.fillStyle = 'rgba(100, 100, 150, 0.2)';
 for (let i = 0; i < 5; i++) {
 const x = ((i * 300 - cameraX * 0.1) % (GAME_WIDTH + 400)) - 100;
 const height = 150 + i * 30;
 
-// Tower
 ctx.fillRect(x, GAME_HEIGHT - height, 80, height);
-// Roof
 ctx.beginPath();
 ctx.moveTo(x - 10, GAME_HEIGHT - height);
 ctx.lineTo(x + 40, GAME_HEIGHT - height - 40);
@@ -2208,7 +2058,6 @@ ctx.lineTo(x + 90, GAME_HEIGHT - height);
 ctx.fill();
 }
 
-// Floating shields
 ctx.fillStyle = 'rgba(197, 202, 233, 0.3)';
 for (let i = 0; i < 4; i++) {
 const x = ((i * 250 + Date.now() * 0.005) % (GAME_WIDTH + 200)) - 100;
@@ -2221,7 +2070,6 @@ ctx.fill();
 }
 
 function drawDefaultBG() {
-// Cute clouds
 ctx.fillStyle = 'rgba(255,255,255,0.7)';
 for (let i = 0; i < 5; i++) {
 const x = (i * 200 - cameraX * 0.1) % (GAME_WIDTH + 400) - 100;
@@ -2235,7 +2083,6 @@ ctx.arc(x + 80 + cloudAnim, y, 30, 0, Math.PI * 2);
 ctx.fill();
 }
 
-// Floating sparkles
 ctx.fillStyle = 'rgba(255,255,255,0.5)';
 for (let i = 0; i < 10; i++) {
 const x = ((i * 100 + Date.now() * 0.02) % (GAME_WIDTH + 200)) - 100;
@@ -2290,7 +2137,7 @@ audioCtx.resume();
 
 document.getElementById('start-screen').style.display = 'none';
 totalScore = 0;
-health = 3;
+health = 5; // Start with 5 lives
 updateHearts();
 updateScore();
 initLevel(1);
@@ -2313,7 +2160,7 @@ highScore = totalScore;
 localStorage.setItem('drLammaHighScore', highScore);
 }
 
-const stars = health === 3 ? '⭐⭐⭐' : health === 2 ? '⭐⭐' : '⭐';
+const stars = health >= 4 ? '⭐⭐⭐' : health >= 2 ? '⭐⭐' : '⭐';
 document.getElementById('final-stars').textContent = stars;
 document.getElementById('certificate-text').textContent = `أكملت جميع المراحل بـ ${totalScore} نقطة!`;
 document.getElementById('final-high-score').textContent = `أعلى نتيجة: ${highScore}`;
